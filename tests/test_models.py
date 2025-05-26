@@ -1,4 +1,4 @@
-# Module tests for ORM model repr methods.
+"""Module tests for ORM model repr methods."""
 
 from src.models import Product, Sale, SaleItem
 
