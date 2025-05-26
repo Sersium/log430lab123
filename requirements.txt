@@ -1,0 +1,5 @@
+SQLAlchemy>=1.4
+psycopg2-binary>=2.8
+tabulate>=0.8
+pytest>=7.0
+pylint>=2.15
