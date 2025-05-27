@@ -8,7 +8,6 @@ package "Business Logic" {
 }
 package "Persistence Layer" {
   [src.models]
-  [src.seed]
 }
 
 src.cli --> src.db : calls

@@ -58,20 +58,37 @@ To also remove volumes:
 podman-compose down -v
 ```
 
-## Seeding the Database
-
-Once your services are running, inject demo data with the seed script:
-
-```bash
-podman-compose exec app python -m src.seed
-```
-
-Or run one-off (container will exit when done):
-
-```bash
-podman-compose run --rm app python -m src.seed
-```
-
 ## Documentation
 
 All design documents, ADRs, and UML diagrams are located under the `docs/` directory.
+
+## Testing
+
+You can run unit tests locally (requires Python and dependencies):
+
+```bash
+pytest -q
+```
+
+## Technology Stack
+
+- Python 3.9+: clear syntax and rich ecosystem
+- SQLAlchemy ORM + PostgreSQL: reliable transactions and easy data modeling
+- Podman Compose: container-based isolation and consistent deployments
+- tabulate: formatted console tables
+
+## Usage
+
+After starting the DB and running `podman-compose run --rm app`, you will see a menu:
+
+```text
+1. Add product
+2. Update stock
+3. Search products
+4. Record sale
+5. Return sale
+6. Stock report
+0. Exit
+```
+
+Enter the number of the desired action and follow prompts to manage products and sales.
