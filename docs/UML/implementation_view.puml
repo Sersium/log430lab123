@@ -1,0 +1,16 @@
+@startuml implementation_view
+title Implementation View - Module Organization
+package "Presentation Layer" {
+  [src.cli]
+}
+package "Business Logic" {
+  [src.db]
+}
+package "Persistence Layer" {
+  [src.models]
+  [src.seed]
+}
+
+src.cli --> src.db : calls
+src.db --> src.models : uses
+@enduml

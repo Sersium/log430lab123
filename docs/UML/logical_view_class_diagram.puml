@@ -1,0 +1,28 @@
+@startuml logical_view
+title Logical View - Class Diagram
+
+class Product {
+  - id: Integer
+  - name: String
+  - category: String
+  - price: Float
+  - stock: Integer
+  + __repr__(): String
+}
+class Sale {
+  - id: Integer
+  - timestamp: DateTime
+  + __repr__(): String
+}
+class SaleItem {
+  - id: Integer
+  - sale_id: Integer
+  - product_id: Integer
+  - quantity: Integer
+  - price: Float
+  + __repr__(): String
+}
+
+Product "1" <-- "*" SaleItem : contains
+Sale "1" <-- "*" SaleItem : items
+@enduml
