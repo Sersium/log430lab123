@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  logistics-db:
+    image: docker.io/library/postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: logistics
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./logistics_data:/var/lib/postgresql/data
+
+  logistics:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:password@logistics-db:5432/logistics
+    depends_on:
+      - logistics-db
+    command: python -m logistics.cli
+
+  store1-db:
+    image: docker.io/library/postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: store1
+    volumes:
+      - ./store1_data:/var/lib/postgresql/data
+
+  store1:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:password@store1-db:5432/store1
+      LOGISTICS_URL: postgresql+psycopg2://postgres:password@logistics-db:5432/logistics
+      STORE_ID: 1
+    depends_on:
+      - store1-db
+    command: python -m src.cli
+    stdin_open: true
+    tty: true
+
+  store2-db:
+    image: docker.io/library/postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: store2
+    volumes:
+      - ./store2_data:/var/lib/postgresql/data
+
+  store2:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:password@store2-db:5432/store2
+      LOGISTICS_URL: postgresql+psycopg2://postgres:password@logistics-db:5432/logistics
+      STORE_ID: 2
+    depends_on:
+      - store2-db
+    command: python -m src.cli
+    stdin_open: true
+    tty: true
+
+  hq:
+    build: .
+    environment:
+      LOGISTICS_URL: postgresql+psycopg2://postgres:password@logistics-db:5432/logistics
+    depends_on:
+      - logistics
+    command: python -m hq.cli

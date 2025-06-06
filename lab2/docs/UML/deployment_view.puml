@@ -1,0 +1,13 @@
+@startuml deployment_view
+title Deployment View - 2-Tier Architecture
+
+node "App Container" as App {
+    component "POS CLI" as POS_CLI
+}
+
+node "DB Container" as DB {
+    database "PostgreSQL" as POSTGRES_DB
+}
+
+POS_CLI --> POSTGRES_DB : SQLAlchemy over TCP
+@enduml

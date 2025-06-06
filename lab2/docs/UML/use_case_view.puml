@@ -1,0 +1,13 @@
+@startuml use_case_view
+title Use Case View - Core Scenarios
+left to right direction
+actor Customer
+actor Clerk
+
+rectangle "Point-of-Sale System" {
+  Customer -- (Browse Products)
+  Customer -- (Purchase Product)
+  Clerk -- (Return Product)
+  Clerk -- (View Stock Report)
+}
+@enduml

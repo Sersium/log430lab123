@@ -1,0 +1,27 @@
+@startuml implementation_view
+title Implementation View - Module Organization
+package "Presentation Layer" {
+  [src.store.views]
+  [src.logistics.cli]
+  [src.hq.cli]
+}
+package "Business Logic" {
+  [src.store.controllers]
+  [src.logistics.controllers]
+  [src.hq.controllers]
+  [src.db]
+}
+package "Persistence Layer" {
+  [src.models]
+  [logistics.models]
+}
+
+src.store.views --> src.store.controllers
+src.logistics.cli --> src.logistics.controllers
+src.hq.cli --> src.hq.controllers
+src.store.controllers --> src.db
+src.logistics.controllers --> src.db
+src.hq.controllers --> src.db
+src.db --> src.models
+src.db --> logistics.models
+@enduml
