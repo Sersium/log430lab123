@@ -6,11 +6,11 @@ from src.db import SessionLocal
 from src.models import Product, Sale, SaleItem
 
 
-def add_product(name: str, price: float, category: str) -> Product:
-    """Create a new product and persist it."""
+def add_product(name: str, price: float, category: str, store_id: int) -> Product:
+    """Create a new product for a given store."""
     session = SessionLocal()
     try:
-        prod = Product(name=name, price=price, category=category)
+        prod = Product(name=name, price=price, category=category, store_id=store_id)
         session.add(prod)
         session.commit()
         session.refresh(prod)
@@ -34,19 +34,16 @@ def update_stock(product_id: int, quantity: int) -> Optional[Product]:
         session.close()
 
 
-def search_products(term: str) -> List[Product]:
-    """Return products matching the search term."""
+def search_products(term: str, store_id: int | None = None) -> List[Product]:
+    """Return products matching the search term for a store."""
     session = SessionLocal()
     try:
-        results = (
-            session.query(Product)
-            .filter(
-                (Product.name.ilike(f"%{term}%"))
-                | (Product.category.ilike(f"%{term}%"))
-            )
-            .all()
+        query = session.query(Product).filter(
+            (Product.name.ilike(f"%{term}%")) | (Product.category.ilike(f"%{term}%"))
         )
-        return results
+        if store_id is not None:
+            query = query.filter(Product.store_id == store_id)
+        return query.all()
     finally:
         session.close()
 
@@ -58,8 +55,13 @@ def record_sale(product_id: int, quantity: int) -> Optional[Sale]:
         prod = session.get(Product, product_id)
         if prod is None or prod.stock < quantity:  # type: ignore[operator]
             return None
-        sale = Sale()
-        _item = SaleItem(sale=sale, product=prod, quantity=quantity, price=prod.price)
+        sale = Sale(store_id=prod.store_id)
+        _item = SaleItem(
+            sale=sale,
+            product=prod,
+            quantity=quantity,
+            price=prod.price,
+        )
         prod.stock -= quantity  # type: ignore[attr-defined]
         session.add(sale)
         session.commit()
@@ -87,10 +89,13 @@ def return_sale(sale_id: int) -> bool:
         session.close()
 
 
-def get_stock_report() -> List[Product]:
-    """Return a list of all products for reporting."""
+def get_stock_report(store_id: int | None = None) -> List[Product]:
+    """Return a list of products for reporting for a given store."""
     session = SessionLocal()
     try:
-        return session.query(Product).all()
+        query = session.query(Product)
+        if store_id is not None:
+            query = query.filter(Product.store_id == store_id)
+        return query.all()
     finally:
         session.close()

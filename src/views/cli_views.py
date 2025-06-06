@@ -22,7 +22,8 @@ def add_product():
         except ValueError:
             print("Invalid price. Please enter a numeric value.")
     category = input("Category (optional): ").strip()
-    prod = ctrl_add_product(name, price, category)
+    store_id = int(input("Store ID: "))
+    prod = ctrl_add_product(name, price, category, store_id)
     print(f"Added product {prod.id} - {prod.name}")
 
 
@@ -40,7 +41,8 @@ def update_stock():
 def search_products():
     """Prompt for a search term and display matching products."""
     term = input("Search term: ").strip()
-    results = ctrl_search_products(term)
+    store_id = int(input("Store ID (blank for all): ") or 0)
+    results = ctrl_search_products(term, store_id if store_id else None)
     table = [(p.id, p.name, p.category, p.price, p.stock) for p in results]
     print(tabulate(table, headers=["ID", "Name", "Category", "Price", "Stock"]))
 
@@ -70,6 +72,7 @@ def return_sale():
 
 def show_stock_report():
     """Display inventory information."""
-    products = ctrl_get_stock_report()
+    store_id = int(input("Store ID (blank for all): ") or 0)
+    products = ctrl_get_stock_report(store_id if store_id else None)
     table = [(p.id, p.name, p.category, p.price, p.stock) for p in products]
     print(tabulate(table, headers=["ID", "Name", "Category", "Price", "Stock"]))

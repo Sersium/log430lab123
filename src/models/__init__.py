@@ -11,6 +11,37 @@ from sqlalchemy.orm import relationship
 from src.db import Base
 
 
+class Store(Base):
+    """Represents a physical store location."""
+
+    __tablename__ = "stores"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
+    location = Column(String, nullable=True)
+
+    products = relationship("Product", back_populates="store")
+    sales = relationship("Sale", back_populates="store")
+
+    def __repr__(self) -> str:  # pragma: no cover - simple representation
+        return f"<Store {self.name}>"
+
+
+class CentralStock(Base):
+    """Represents stock kept at the logistics center."""
+
+    __tablename__ = "central_stock"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"))
+    quantity = Column(Integer, default=0)
+
+    product = relationship("Product")
+
+    def __repr__(self) -> str:  # pragma: no cover - simple representation
+        return f"<CentralStock product={self.product_id} qty={self.quantity}>"
+
+
 class Product(Base):
     """Represents a product in the inventory."""
 
@@ -21,6 +52,9 @@ class Product(Base):
     category = Column(String, index=True, nullable=True)
     price = Column(Float, nullable=False)
     stock = Column(Integer, default=0)
+    store_id = Column(Integer, ForeignKey("stores.id"), nullable=True)
+
+    store = relationship("Store", back_populates="products")
 
     def __repr__(self):
         return f"<Product {self.name}>"
@@ -33,7 +67,10 @@ class Sale(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    store_id = Column(Integer, ForeignKey("stores.id"), nullable=True)
     items = relationship("SaleItem", back_populates="sale", cascade="all, delete")
+
+    store = relationship("Store", back_populates="sales")
 
     def __repr__(self):
         return f"<Sale {self.id}>"
