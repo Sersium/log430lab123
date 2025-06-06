@@ -15,7 +15,12 @@ from src.controllers import (
 def add_product():
     """Prompt for product details and display result."""
     name = input("Product name: ").strip()
-    price = float(input("Price: "))
+    while True:
+        try:
+            price = float(input("Price: "))
+            break
+        except ValueError:
+            print("Invalid price. Please enter a numeric value.")
     category = input("Category (optional): ").strip()
     prod = ctrl_add_product(name, price, category)
     print(f"Added product {prod.id} - {prod.name}")
