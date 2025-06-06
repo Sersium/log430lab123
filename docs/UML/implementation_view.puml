@@ -9,6 +9,11 @@ package "Business Logic" {
 package "Persistence Layer" {
   [src.models]
 }
+package "Synchronization" {
+  [src.sync_service]
+}
+
 src.cli --> src.db : calls
 src.db --> src.models : uses
+src.sync_service --> src.db : replicates
 @enduml
