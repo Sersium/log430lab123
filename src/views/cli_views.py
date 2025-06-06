@@ -22,7 +22,12 @@ def add_product():
         except ValueError:
             print("Invalid price. Please enter a numeric value.")
     category = input("Category (optional): ").strip()
-    store_id = int(input("Store ID: "))
+    while True:
+        try:
+            store_id = int(input("Store ID: "))
+            break
+        except ValueError:
+            print("Invalid Store ID. Please enter a numeric value.")
     prod = ctrl_add_product(name, price, category, store_id)
     print(f"Added product {prod.id} - {prod.name}")
 
