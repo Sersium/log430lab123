@@ -9,7 +9,6 @@ package "Business Logic" {
 package "Persistence Layer" {
   [src.models]
 }
-
 src.cli --> src.db : calls
 src.db --> src.models : uses
 @enduml

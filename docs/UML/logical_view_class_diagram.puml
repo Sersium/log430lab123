@@ -23,6 +23,14 @@ class SaleItem {
   + __repr__(): String
 }
 
+class Store {
+  - id: Integer
+  - name: String
+  - address: String
+}
+
 Product "1" <-- "*" SaleItem : contains
 Sale "1" <-- "*" SaleItem : items
+Store "1" --> "*" Product : manages
+Store "1" --> "*" Sale : records
 @enduml

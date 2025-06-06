@@ -1,0 +1,17 @@
+@startuml process_view
+title Process View - Multi-Store Synchronization
+
+node "Store" {
+  [POS Process] as POS
+  [Local DB] as LocalDB
+  [Sync Service] as Sync
+  POS --> LocalDB : ORM calls
+  Sync --> LocalDB : read/write
+}
+
+node "HQ" {
+  [Central DB] as HQ_DB
+}
+
+Sync --> HQ_DB : replicate over network
+@enduml
