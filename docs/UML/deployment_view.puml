@@ -1,13 +1,30 @@
 @startuml deployment_view
-title Deployment View - 2-Tier Architecture
+title Deployment View - Multi-Store Architecture
 
-node "App Container" as App {
-    component "POS CLI" as POS_CLI
+node "Store A" {
+    node "App Container" {
+        component "POS CLI A" as POS_A
+    }
+    node "DB Container" {
+        database "PostgreSQL" as DB_A
+    }
+    POS_A --> DB_A : SQLAlchemy
 }
 
-node "DB Container" as DB {
-    database "PostgreSQL" as POSTGRES_DB
+node "Store B" {
+    node "App Container" {
+        component "POS CLI B" as POS_B
+    }
+    node "DB Container" {
+        database "PostgreSQL" as DB_B
+    }
+    POS_B --> DB_B : SQLAlchemy
 }
 
-POS_CLI --> POSTGRES_DB : SQLAlchemy over TCP
+cloud "HQ" {
+    database "Central DB" as HQ_DB
+}
+
+DB_A --> HQ_DB : replicate
+DB_B --> HQ_DB : replicate
 @enduml
