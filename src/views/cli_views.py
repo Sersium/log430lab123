@@ -9,6 +9,11 @@ from src.controllers import (
     record_sale as ctrl_record_sale,
     return_sale as ctrl_return_sale,
     get_stock_report as ctrl_get_stock_report,
+    generate_sales_report as ctrl_generate_sales_report,
+    request_replenishment as ctrl_request_replenishment,
+    get_dashboard_metrics as ctrl_get_dashboard_metrics,
+    generate_hq_sales_report as ctrl_generate_hq_sales_report,
+    get_hq_stock as ctrl_get_hq_stock,
 )
 
 
@@ -22,7 +27,8 @@ def add_product():
         except ValueError:
             print("Invalid price. Please enter a numeric value.")
     category = input("Category (optional): ").strip()
-    prod = ctrl_add_product(name, price, category)
+    store_id = int(input("Store ID: "))
+    prod = ctrl_add_product(name, price, category, store_id)
     print(f"Added product {prod.id} - {prod.name}")
 
 
@@ -40,7 +46,8 @@ def update_stock():
 def search_products():
     """Prompt for a search term and display matching products."""
     term = input("Search term: ").strip()
-    results = ctrl_search_products(term)
+    store_id = int(input("Store ID (blank for all): ") or 0)
+    results = ctrl_search_products(term, store_id if store_id else None)
     table = [(p.id, p.name, p.category, p.price, p.stock) for p in results]
     print(tabulate(table, headers=["ID", "Name", "Category", "Price", "Stock"]))
 
@@ -70,6 +77,60 @@ def return_sale():
 
 def show_stock_report():
     """Display inventory information."""
-    products = ctrl_get_stock_report()
+    store_id = int(input("Store ID (blank for all): ") or 0)
+    products = ctrl_get_stock_report(store_id if store_id else None)
     table = [(p.id, p.name, p.category, p.price, p.stock) for p in products]
     print(tabulate(table, headers=["ID", "Name", "Category", "Price", "Stock"]))
+
+
+def sales_report():
+    """Display consolidated sales information for all stores."""
+    report = ctrl_generate_sales_report()
+    print("\nRevenue by store:")
+    print(tabulate(report["stores"], headers=["Store", "Revenue"]))
+    print("\nTop products:")
+    print(tabulate(report["top_products"], headers=["Product", "Qty"]))
+    print("\nCurrent stock:")
+    print(tabulate(report["stock"], headers=["Product", "Stock", "Store"]))
+
+
+def handle_replenishment():
+    """Request stock from the central warehouse."""
+    store_id = int(input("Store ID: "))
+    product_id = int(input("Product ID: "))
+    qty = int(input("Quantity to request: "))
+    if ctrl_request_replenishment(store_id, product_id, qty):
+        print("Replenishment successful.")
+    else:
+        print("Insufficient stock in central warehouse or invalid IDs.")
+
+
+def show_dashboard():
+    """Display high level KPIs for management."""
+    metrics = ctrl_get_dashboard_metrics()
+    print("\nRevenue by store:")
+    print(tabulate(metrics["revenue"], headers=["Store", "Revenue"]))
+    print("\nOut of stock:")
+    print(tabulate(metrics["out_of_stock"], headers=["Product", "Store"]))
+    print("\nOverstock (>100):")
+    print(tabulate(metrics["overstock"], headers=["Product", "Store", "Qty"]))
+    print("\nWeekly trends:")
+    print(tabulate(metrics["weekly"], headers=["Week", "Store", "Revenue"]))
+
+
+
+def hq_stock_report():
+    """Display current HQ warehouse stock."""
+    stock = ctrl_get_hq_stock()
+    print(tabulate(stock, headers=["Product", "Qty"]))
+
+
+def hq_sales_report():
+    """Display sales report using HQ data."""
+    report = ctrl_generate_hq_sales_report()
+    print("\nRevenue by store:")
+    print(tabulate(report["stores"], headers=["Store", "Revenue"]))
+    print("\nTop products:")
+    print(tabulate(report["top_products"], headers=["Product", "Qty"]))
+    print("\nCurrent stock:")
+    print(tabulate(report["stock"], headers=["Product", "Stock", "Store"]))

@@ -5,18 +5,31 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: posdb
+      POSTGRES_DB: posdb_local
     ports:
       - "5432:5432"
     volumes:
       - ./db_data:/var/lib/postgresql/data
 
+  hqdb:
+    image: docker.io/library/postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: posdb_hq
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./hq_db_data:/var/lib/postgresql/data
+
   app:
     build: .
     environment:
-      DATABASE_URL: postgresql+psycopg2://postgres:password@db:5432/posdb
+      DATABASE_URL: postgresql+psycopg2://postgres:password@db:5432/posdb_local
+      HQ_DATABASE_URL: postgresql+psycopg2://postgres:password@hqdb:5432/posdb_hq
     depends_on:
       - db
+      - hqdb
     volumes:
       - ./src:/app/src
     stdin_open: true  # keep stdin open for interactive console

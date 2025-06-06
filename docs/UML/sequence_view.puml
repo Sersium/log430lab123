@@ -2,13 +2,15 @@
 title Sequence Diagram - POS CLI Operations
 actor User
 participant "POS CLI" as CLI
-database "PostgreSQL DB" as DB
+database "Local DB" as DB
+database "HQ DB" as HQ
 
 User -> CLI : select "Record sale"
 CLI -> DB : INSERT INTO sales...
 DB --> CLI : sale_id
 CLI -> DB : INSERT INTO sale_items...
 DB --> CLI : success
+CLI -> HQ : sync new sale
 CLI --> User : "Sale recorded"
 
 User -> CLI : select "Stock report"

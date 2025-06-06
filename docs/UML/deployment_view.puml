@@ -1,13 +1,17 @@
 @startuml deployment_view
-title Deployment View - 2-Tier Architecture
+title Deployment View - Local/HQ Databases
 
 node "App Container" as App {
     component "POS CLI" as POS_CLI
 }
 
-node "DB Container" as DB {
-    database "PostgreSQL" as POSTGRES_DB
+node "Local DB" as Local {
+    database "PostgreSQL" as DB_LOCAL
+}
+node "HQ DB" as HQ {
+    database "PostgreSQL" as DB_HQ
 }
 
-POS_CLI --> POSTGRES_DB : SQLAlchemy over TCP
+POS_CLI --> DB_LOCAL : ORM calls
+POS_CLI --> DB_HQ : sync
 @enduml

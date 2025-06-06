@@ -18,6 +18,11 @@ def main():
         '4': ('Record sale', cli_views.record_sale),
         '5': ('Return sale', cli_views.return_sale),
         '6': ('Stock report', cli_views.show_stock_report),
+        '7': ('Sales report', cli_views.sales_report),
+        '8': ('Replenish from warehouse', cli_views.handle_replenishment),
+        '9': ('Dashboard', cli_views.show_dashboard),
+        '10': ('HQ sales report', cli_views.hq_sales_report),
+        '11': ('HQ stock report', cli_views.hq_stock_report),
         '0': ('Exit', lambda: sys.exit(0)),
     }
 

@@ -30,10 +30,10 @@ cd log430lab1
    podman-compose build
    ```
 
-2. Start the database in detached mode:
+2. Start the databases in detached mode (local store and HQ):
 
    ```bash
-   podman-compose up -d db
+   podman-compose up -d db hqdb
    ```
 
 3. Run the client (CLI) interactively (inherit tty and stdin settings from service):
@@ -42,7 +42,9 @@ cd log430lab1
    podman-compose run --rm app
    ```
 
-This ensures the database runs in the background while you interact with the POS CLI.
+This ensures both databases run in the background while you interact with the POS CLI.
+The compose file already sets `HQ_DATABASE_URL` so the application can
+synchronize with the HQ database and generate consolidated reports.
 
 ## Stopping Services
 
@@ -88,6 +90,11 @@ After starting the DB and running `podman-compose run --rm app`, you will see a 
 4. Record sale
 5. Return sale
 6. Stock report
+7. Sales report
+8. Replenish from warehouse
+9. Dashboard
+10. HQ sales report
+11. HQ stock report
 0. Exit
 ```
 

@@ -22,7 +22,22 @@ class SaleItem {
   - price: Float
   + __repr__(): String
 }
+class Store {
+  - id: Integer
+  - name: String
+  - location: String
+  + __repr__(): String
+}
+class CentralStock {
+  - id: Integer
+  - product_id: Integer
+  - quantity: Integer
+  + __repr__(): String
+}
 
 Product "1" <-- "*" SaleItem : contains
 Sale "1" <-- "*" SaleItem : items
+Store "1" <-- "*" Product : manages
+Store "1" <-- "*" Sale : records
+Product "1" <-- "*" CentralStock : stocked in
 @enduml
