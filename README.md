@@ -1,8 +1,8 @@
 <!-- filepath: /home/log430/log430lab1/README.md -->
 
-# log430lab1
+# log430lab123
 
-laboratoire 1 du cours log430 ete 2025
+laboratoire 1-2-3 du cours log430 ete 2025
 
 ## Project Overview
 
