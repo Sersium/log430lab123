@@ -7,4 +7,4 @@ This repository contains code and documentation for three laboratories used in t
 - **lab2** – prototype multi-store architecture with a logistics service and headquarters interface.
 
 Each lab folder contains its own README with setup instructions.
-nThis project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
