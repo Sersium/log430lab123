@@ -1,6 +1,6 @@
 """Module tests for ORM model repr methods."""
 
-from src.models import Product, Sale, SaleItem
+from src.models import Product, Sale, SaleItem, Store, CentralStock
 
 
 def test_product_repr():
@@ -16,3 +16,11 @@ def test_sale_and_saleitem_repr():
     assert repr(s).startswith("<Sale ") and repr(s).endswith(">")
     item = SaleItem(sale_id=1, product_id=2, quantity=3, price=4.0)
     assert "sale=1" in repr(item) and "product=2" in repr(item)
+
+
+def test_store_and_centralstock_repr():
+    """Store and CentralStock __repr__ outputs."""
+    store = Store(name="Main", location="HQ")
+    assert "<Store Main>" == repr(store)
+    cs = CentralStock(product_id=1, quantity=5)
+    assert "product=1" in repr(cs) and "qty=5" in repr(cs)
